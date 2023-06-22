@@ -233,8 +233,10 @@ class Guidelet(object):
     self.exitButton.setText("Exit")
     self.advancedLayout.addRow(self.exitButton)
 
-  def setupAdditionalPanel(self, uiFilePath=r'.\Resources\UI\TrackerUIMike.ui'):
+  def setupAdditionalPanel(self):
     """Being used for testing """
+    moduleDir = os.path.dirname(__file__)
+    uiFilePath = os.path.join(moduleDir, 'Resources', 'UI', 'TrackerUIMike.ui')
     loadedUI = slicer.util.loadUI(uiFilePath)
     self.sliceletPanelLayout.addWidget(loadedUI)
     pass
