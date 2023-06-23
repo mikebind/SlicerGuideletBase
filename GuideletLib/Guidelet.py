@@ -541,7 +541,8 @@ class Guidelet(object):
     self.sliceletDockWidget.show()
 
     mainWindow=slicer.util.mainWindow()
-    mainWindow.showFullScreen()
+    #mainWindow.showFullScreen()
+    mainWindow.showMaximized() # fullscreen was causing problems
 
   def onShowFullSlicerInterfaceClicked(self):
     self.showToolbars(True)
