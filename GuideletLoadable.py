@@ -197,7 +197,7 @@ class GuideletLogic(ScriptedLoadableModuleLogic):
                    'PlusServerHostNamePort' : 'localhost:18944',
                    'RecordingFilenamePrefix' : 'GuideletRecording-',
                    'RecordingFilenameExtension' : '.mhd',
-                   'PlusAppDataDirectory' : '~/AppData/PlusApp/Data', # TODO: FIND OUT WHAT THIS ACTUALLY IS
+                   'PlusAppDataDirectory' : r'C:/Users/mbinds/PlusApp-2.8.0.20191105-Win32/data', # TODO: try ~ instead of C:\Users\mbinds
                    'SavedScenesDirectory' : defaultSavePath,
                    'UltrasoundBrightnessControl' : 'Buttons',
                    'RecordingEnabledWhenConnectorNodeDisconnected' : 'False',
