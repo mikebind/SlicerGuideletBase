@@ -17,7 +17,7 @@ class Guidelet(object):
     # Show/hide  toolbars
     if show:
       # Don't automatically show markups/sequence browser toolbars by default
-      dontShow = [slicer.util.findChild(slicer.util.mainWindow(), toolBarName) for toolBarName in ['MarkupsToolBar','SequenceBrowserToolbar'] ]
+      dontShow = [slicer.util.findChild(slicer.util.mainWindow(), toolBarName) for toolBarName in ['MarkupsToolBar','SequenceBrowserToolBar'] ]
       slicer.util.setToolbarsVisible(True, dontShow)
     else:
       slicer.util.setToolbarsVisible(False) # Hide ALL toolbars
