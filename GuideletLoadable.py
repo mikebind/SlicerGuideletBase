@@ -189,7 +189,7 @@ class GuideletLogic(ScriptedLoadableModuleLogic):
   # Adds a default configurations to Slicer.ini
   def addValuesToDefaultConfiguration(self):
     moduleDir = os.path.dirname(__file__)
-    defaultSavePath = os.path.join(moduleDir, 'SavedScenes')
+    defaultSavePath = os.path.join(moduleDir, 'SavedResults')
 
     settingList = {'StyleSheet' : 'DefaultStyle.qss',
                    'LiveUltrasoundNodeName' : 'Image_Reference',
@@ -197,6 +197,7 @@ class GuideletLogic(ScriptedLoadableModuleLogic):
                    'PlusServerHostNamePort' : 'localhost:18944',
                    'RecordingFilenamePrefix' : 'GuideletRecording-',
                    'RecordingFilenameExtension' : '.mhd',
+                   'PlusAppDataDirectory' : '~/AppData/PlusApp/Data', # TODO: FIND OUT WHAT THIS ACTUALLY IS
                    'SavedScenesDirectory' : defaultSavePath,
                    'UltrasoundBrightnessControl' : 'Buttons',
                    'RecordingEnabledWhenConnectorNodeDisconnected' : 'False',

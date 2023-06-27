@@ -7,17 +7,21 @@ import time
 if slicer.app.majorVersion >= 5 or (slicer.app.majorVersion >= 4 and slicer.app.minorVersion >= 11):
   unicode = str
 
-from .UltraSound import UltraSound
-from .AirwayTrackerClass import AirwayTrackerClass
+#from .UltraSound import UltraSound
+#from .AirwayTrackerClass import AirwayTrackerClass
 
 class Guidelet(object):
   @staticmethod
   def showToolbars(show):
 
-    # Show/hide all existing toolbars
-    for toolbar in slicer.util.mainWindow().findChildren('QToolBar'):
-      toolbar.setVisible(show)
-
+    # Show/hide  toolbars
+    if show:
+      # Don't automatically show markups/sequence browser toolbars by default
+      dontShow = [slicer.util.findChild(slicer.util.mainWindow(), toolBarName) for toolBarName in ['MarkupsToolBar','SequenceBrowserToolbar'] ]
+      slicer.util.setToolbarsVisible(True, dontShow)
+    else:
+      slicer.util.setToolbarsVisible(False) # Hide ALL toolbars
+    
     # Prevent sequence browser toolbar showing up automatically
     # when a sequence is loaded.
     # (put in try block because Sequence Browser module is not always installed)
@@ -32,8 +36,9 @@ class Guidelet(object):
 
   @staticmethod
   def showMenuBar(show):
-    for menubar in slicer.util.mainWindow().findChildren('QMenuBar'):
-      menubar.setVisible(show)
+    slicer.util.setMenuBarsVisible(show)
+    #for menubar in slicer.util.mainWindow().findChildren('QMenuBar'):
+    #  menubar.setVisible(show)
 
   @staticmethod
   def onGenericCommandResponseReceived(commandId, responseNode):
@@ -66,12 +71,12 @@ class Guidelet(object):
     self.layoutManager = slicer.app.layoutManager()
     self.layoutNameToIdMap = {}
     self.layoutNameToSelectCallbackMap = {}
-    self.defaultLayoutName = self.VIEW_ULTRASOUND
+    self.defaultLayoutName = self.VIEW_3D # VIEW_ULTRASOUND
 
     self.logic.updateParameterNodeFromSettings(self.parameterNode, self.configurationName)
     self.setAndObserveParameterNode(self.parameterNode)
 
-    self.airwaytrackerclass = self.getAirwayTrackerClass()
+    #self.airwaytrackerclass = self.getAirwayTrackerClass()
     #self.ultrasound = self.getUltrasoundClass()
     #self.fitUltrasoundImageToViewOnConnect = True
     self.setupConnectorNode()
@@ -139,12 +144,6 @@ class Guidelet(object):
     #for panel in featurePanelList:
     #  self.collapsibleButtonGroup.addButton(panel)
 
-  def getUltrasoundClass(self):
-    return UltraSound(self)
-  
-  def getAirwayTrackerClass(self):
-    return AirwayTrackerClass(self)
-
   def preCleanup(self):
     self.sliceletDockWidget.setWidget(None)
     self.sliceletPanel = None
@@ -152,18 +151,19 @@ class Guidelet(object):
     self.sliceletDockWidget = None
 
     #self.ultrasound.preCleanup()
-    self.airwaytrackerclass.preCleanup()
+    #self.airwaytrackerclass.preCleanup()
     self.disconnect()
 
   def createFeaturePanels(self):
     #self.ultrasoundCollapsibleButton, self.ultrasoundLayout, self.procedureLayout = self.ultrasound.setupPanel(self.sliceletPanelLayout)
-    (self.airwaytrackerclassCollapsibleButton, 
-     self.airwaytrackerclassLayout, 
-     self.airwaytrackerclassProcedureLayout) = self.airwaytrackerclass.setupPanel(self.sliceletPanelLayout)
+    #(self.airwaytrackerclassCollapsibleButton, 
+    # self.airwaytrackerclassLayout, 
+    # self.airwaytrackerclassProcedureLayout) = self.airwaytrackerclass.setupPanel(self.sliceletPanelLayout)
     self.advancedCollapsibleButton = ctk.ctkCollapsibleButton()
 
     #featurePanelList = [self.ultrasoundCollapsibleButton, self.advancedCollapsibleButton]
-    featurePanelList = [self.airwaytrackerclassCollapsibleButton, self.advancedCollapsibleButton]
+    #featurePanelList = [self.airwaytrackerclassCollapsibleButton, self.advancedCollapsibleButton]
+    featurePanelList = [self.advancedCollapsibleButton]
 
     return featurePanelList
 
@@ -184,7 +184,7 @@ class Guidelet(object):
 
     self.registerDefaultGuideletLayouts()
 
-    self.selectView(self.VIEW_ULTRASOUND_3D)
+    self.selectView(self.VIEW_3D)
 
     # OpenIGTLink connector node selection
     self.linkInputSelector = slicer.qMRMLNodeComboBox()
@@ -206,6 +206,10 @@ class Guidelet(object):
     self.showGuideletFullscreenButton = qt.QPushButton()
     self.showGuideletFullscreenButton.setText("Show Guidelet in full screen")
     self.advancedLayout.addRow(self.showGuideletFullscreenButton)
+
+    self.showGuideletTabbedButton = qt.QPushButton()
+    self.showGuideletTabbedButton.setText("Show Guidelet in tabbed panel")
+    self.advancedLayout.addRow(self.showGuideletTabbedButton)
 
     self.saveSceneButton = qt.QPushButton()
     self.saveSceneButton.setText("Save Guidelet scene")
@@ -235,10 +239,11 @@ class Guidelet(object):
 
   def setupAdditionalPanel(self):
     """Being used for testing """
-    moduleDir = os.path.dirname(__file__)
+    """moduleDir = os.path.dirname(__file__)
     uiFilePath = os.path.join(moduleDir, 'Resources', 'UI', 'TrackerUIMike.ui')
     loadedUI = slicer.util.loadUI(uiFilePath)
     self.sliceletPanelLayout.addWidget(loadedUI)
+    """
     pass
 
   def registerLayout(self, layoutName, layoutId, layoutXmlDescription, layoutSelectCallback=None):
@@ -463,9 +468,11 @@ class Guidelet(object):
 
   def setupScene(self):
     """ setup feature scene
+    NO LONGER USED!  Code moved from AirwayTrackerClass.py to ExampleGuidelet.py
     """
     #self.ultrasound.setupScene()
-    self.airwaytrackerclass.setupScene() # This could be the place to set up the transform hierarchy, but isn't used that way now
+    #self.airwaytrackerclass.setupScene() # This could be the place to set up the transform hierarchy, but isn't used that way now
+    pass
 
   def onSaveDirectoryPreferencesChanged(self):
     sceneSaveDirectory = str(self.saveDirectoryLineEdit.currentPath)
@@ -494,6 +501,7 @@ class Guidelet(object):
     slicer.util.showStatusMessage("Saved!", 2000)
 
   def onExitButtonClicked(self):
+    # TODO: change this so that it just closes the guidelet rather than all of slicer...
     mainwindow = slicer.util.mainWindow()
     mainwindow.close()
 
@@ -501,11 +509,12 @@ class Guidelet(object):
     logging.debug('Guidelet.setupConnections()')
     #self.ultrasoundCollapsibleButton.connect('toggled(bool)', self.onUltrasoundPanelToggled)
     #self.ultrasound.setupConnections()
-    self.airwaytrackerclassCollapsibleButton.connect('toggled(bool)', self.onAirwayTrackerPanelToggled)
-    self.airwaytrackerclass.setupConnections()
+    #self.airwaytrackerclassCollapsibleButton.connect('toggled(bool)', self.onAirwayTrackerPanelToggled)
+    #self.airwaytrackerclass.setupConnections()
     #advanced settings panel
     self.showFullSlicerInterfaceButton.connect('clicked()', self.onShowFullSlicerInterfaceClicked)
     self.showGuideletFullscreenButton.connect('clicked()', self.onShowGuideletFullscreenButton)
+    self.showGuideletTabbedButton.connect('clicked()', self.onShowGuideletTabbedButton)
     self.saveSceneButton.connect('clicked()', self.onSaveSceneClicked)
     self.linkInputSelector.connect("nodeActivated(vtkMRMLNode*)", self.onConnectorNodeActivated)
     self.viewSelectorComboBox.connect('activated(int)', self.onViewSelect)
@@ -521,6 +530,7 @@ class Guidelet(object):
     #advanced settings panel
     self.showFullSlicerInterfaceButton.disconnect('clicked()', self.onShowFullSlicerInterfaceClicked)
     self.showGuideletFullscreenButton.disconnect('clicked()', self.onShowGuideletFullscreenButton)
+    self.showGuideletTabbedButton.disconnect('clicked()', self.onShowGuideletTabbedButton)
     self.saveSceneButton.disconnect('clicked()', self.onSaveSceneClicked)
     self.linkInputSelector.disconnect("nodeActivated(vtkMRMLNode*)", self.onConnectorNodeActivated)
     self.viewSelectorComboBox.disconnect('activated(int)', self.onViewSelect)
@@ -544,6 +554,9 @@ class Guidelet(object):
     #mainWindow.showFullScreen()
     mainWindow.showMaximized() # fullscreen was causing problems
 
+  def showTabbed(self):
+    self.showModulePanel(True)
+
   def onShowFullSlicerInterfaceClicked(self):
     self.showToolbars(True)
     self.showModulePanel(True)
@@ -556,6 +569,9 @@ class Guidelet(object):
 
   def onShowGuideletFullscreenButton(self):
     self.showFullScreen()
+
+  def onShowGuideletTabbedButton(self):
+    self.showTabbed()
 
   def executeCommand(self, command, commandResponseCallback):
     command.SetCommandAttribute('Name', command.GetCommandName())
@@ -595,7 +611,7 @@ class Guidelet(object):
     logging.info("setupConnectorNode")
     self.connectorNodeObserverTagList = []
     self.connectorNodeConnected = False
-    self.connectorNode = self.airwaytrackerclass.createPlusConnector()
+    self.connectorNode = self.createPlusConnector() # TODO: figure out how to move this up to the ExampleGuidelet level?
     #self.connectorNode = self.ultrasound.createPlusConnector()
     self.connectorNode.Start()
 
@@ -606,7 +622,7 @@ class Guidelet(object):
     if self.connectorNodeConnected and not force:
         return
     self.connectorNodeConnected = True
-    self.airwaytrackerclass.onConnectorNodeConnected()
+    self.onConnectorNodeConnected_Ex()
     #self.ultrasound.onConnectorNodeConnected()
     #if self.fitUltrasoundImageToViewOnConnect:
     #  self.delayedFitUltrasoundImageToView(3000)
@@ -619,7 +635,7 @@ class Guidelet(object):
         return
     self.connectorNodeConnected = False
     #self.ultrasound.onConnectorNodeDisconnected()
-    self.airwaytrackerclass.onConnectorNodeDisconnected()
+    self.onConnectorNodeDisconnected_Ex()
 
   def onConnectorNodeActivated(self):
     logging.debug('onConnectorNodeActivated')
