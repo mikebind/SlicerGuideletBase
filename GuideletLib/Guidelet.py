@@ -171,12 +171,26 @@ class Guidelet(object):
     logging.debug('setupAdvancedPanel')
 
     self.advancedCollapsibleButton.setProperty('collapsedHeight', 20)
-    self.advancedCollapsibleButton.text = "Settings"
+    self.advancedCollapsibleButton.text = "Advanced"
     self.sliceletPanelLayout.addWidget(self.advancedCollapsibleButton)
 
     self.advancedLayout = qt.QFormLayout(self.advancedCollapsibleButton)
     self.advancedLayout.setContentsMargins(12, 4, 4, 4)
     self.advancedLayout.setSpacing(4)
+
+    # Selector for segmentation
+    self.airwayZoneSegmentationNodeSelector = slicer.qMRMLNodeComboBox()
+    self.airwayZoneSegmentationNodeSelector.nodeTypes = ('vtkMRMLSegmentationNode',)
+    self.airwayZoneSegmentationNodeSelector.selectNodeUponCreation = True
+    self.airwayZoneSegmentationNodeSelector.setMRMLScene(slicer.mrmlScene)
+    self.airwayZoneSegmentationNodeSelector.setToolTip("Select segmentaiton node containing 'airwayZone', used for trimming raw recording paths")
+    self.advancedLayout.addRow("AirwayZone Segmentation", self.airwayZoneSegmentationNodeSelector)
+    # Selector for Leaf transform node
+    self.leafTransformNodeSelector = slicer.qMRMLNodeComboBox()
+    self.leafTransformNodeSelector.nodeTypes = ('vtkMRMLLinearTransformNode',)
+    self.leafTransformNodeSelector.setMRMLScene(slicer.mrmlScene)
+    self.leafTransformNodeSelector.setToolTip( "Select child transform node (represents scope tip position)")
+    self.advancedLayout.addRow("Leaf Transform Node: ", self.leafTransformNodeSelector)
 
     # Layout selection combo box
     self.viewSelectorComboBox = qt.QComboBox(self.advancedCollapsibleButton)
@@ -505,6 +519,10 @@ class Guidelet(object):
     mainwindow = slicer.util.mainWindow()
     mainwindow.close()
 
+  #def onAirwayZoneSegmentationSelectionChanged(self):
+  #  self.parameterNode.SetParameter('airwayZoneSegmentationNodeID', self.airwayZoneSegmentationNodeSelector.currentNodeID)
+    
+
   def setupConnections(self):
     logging.debug('Guidelet.setupConnections()')
     #self.ultrasoundCollapsibleButton.connect('toggled(bool)', self.onUltrasoundPanelToggled)
@@ -516,6 +534,8 @@ class Guidelet(object):
     self.showGuideletFullscreenButton.connect('clicked()', self.onShowGuideletFullscreenButton)
     self.showGuideletTabbedButton.connect('clicked()', self.onShowGuideletTabbedButton)
     self.saveSceneButton.connect('clicked()', self.onSaveSceneClicked)
+    self.airwayZoneSegmentationNodeSelector.connect('currentNodeChanged(vtkMRMLNode*)', self.updateParameterNodeFromGuideletGUI)
+    self.leafTransformNodeSelector.connect('currentNodeChanged(vtkMRMLNode*)', self.updateParameterNodeFromGuideletGUI)
     self.linkInputSelector.connect("nodeActivated(vtkMRMLNode*)", self.onConnectorNodeActivated)
     self.viewSelectorComboBox.connect('activated(int)', self.onViewSelect)
     self.exitButton.connect('clicked()', self.onExitButtonClicked)
