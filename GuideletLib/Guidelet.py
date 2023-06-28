@@ -174,6 +174,7 @@ class Guidelet(object):
     self.advancedCollapsibleButton.setProperty('collapsedHeight', 20)
     self.advancedCollapsibleButton.text = "Advanced"
     self.sliceletPanelLayout.addWidget(self.advancedCollapsibleButton)
+    self.advancedCollapsibleButton.collapsed = True
 
     self.advancedLayout = qt.QFormLayout(self.advancedCollapsibleButton)
     self.advancedLayout.setContentsMargins(12, 4, 4, 4)
