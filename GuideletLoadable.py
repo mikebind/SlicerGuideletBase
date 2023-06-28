@@ -132,14 +132,19 @@ class GuideletWidget(ScriptedLoadableModuleWidget):
   def onLaunchGuideletButtonClicked(self):
     logging.debug('onLaunchGuideletButtonClicked')
 
+    sceneAlreadySetUp = False
     if not self.guideletInstance:
       self.guideletInstance = self.createGuideletInstance()
+      # This creates the ExampleGuideletGuidelet, which calls setupScene during 
+      # in the __init__. We don't need to do this twice!
+      sceneAlreadySetUp = True
 
     settings = slicer.app.userSettings()
     hasBorder = settings.value(self.moduleName + '/Configurations/' + self.selectedConfigurationName + '/HasBorderInFullScreen') == 'True'
     slicer.app.setHasBorderInFullScreen(hasBorder)
 
-    self.guideletInstance.setupScene()
+    if not sceneAlreadySetUp:
+      self.guideletInstance.setupScene()
     self.guideletInstance.onSceneLoaded()
     self.guideletInstance.showFullScreen()
 
