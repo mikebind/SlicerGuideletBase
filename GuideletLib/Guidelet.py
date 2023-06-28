@@ -305,7 +305,7 @@ class Guidelet(object):
       "  </view>"
       " </item>"
       "</layout>")
-    self.registerLayout(self.VIEW_DUAL_3D, 503, customLayout, self.hideUltrasoundSliceIn3DView)
+    #self.registerLayout(self.VIEW_DUAL_3D, 503, customLayout, self.hideUltrasoundSliceIn3DView)
 
     customLayout = (
       "<layout type=\"horizontal\" split=\"false\" >"
@@ -322,7 +322,7 @@ class Guidelet(object):
       "  </view>"
       " </item>"
       "</layout>")
-    self.registerLayout(self.VIEW_ULTRASOUND_3D, 504, customLayout, self.delayedFitAndShowUltrasoundSliceIn3dView)
+    #self.registerLayout(self.VIEW_ULTRASOUND_3D, 504, customLayout, self.delayedFitAndShowUltrasoundSliceIn3dView)
 
     customLayout = (
       "<layout type=\"horizontal\" split=\"false\" >"
@@ -344,7 +344,7 @@ class Guidelet(object):
       "  </view>"
       " </item>"
       "</layout>")
-    self.registerLayout(self.VIEW_ULTRASOUND_DUAL_3D, 505, customLayout, self.delayedFitAndShowUltrasoundSliceIn3dView)
+    #self.registerLayout(self.VIEW_ULTRASOUND_DUAL_3D, 505, customLayout, self.delayedFitAndShowUltrasoundSliceIn3dView)
 
     customLayout = (
       "<layout type=\"vertical\" split=\"true\" >"
@@ -368,7 +368,7 @@ class Guidelet(object):
       "  </view>"
       " </item>"
       "</layout>")
-    self.registerLayout(self.VIEW_TRIPLE_3D, 506, customLayout, self.hideUltrasoundSliceIn3DView)
+    #self.registerLayout(self.VIEW_TRIPLE_3D, 506, customLayout, self.hideUltrasoundSliceIn3DView)
 
     customLayout = (
       "<layout type=\"horizontal\" split=\"false\" >"
@@ -396,7 +396,7 @@ class Guidelet(object):
       "  </layout>"
       " </item>"
       "</layout>")
-    self.registerLayout(self.VIEW_ULTRASOUND_CAM_3D, 507, customLayout, self.delayedFitAndShowUltrasoundSliceIn3dView)
+    #self.registerLayout(self.VIEW_ULTRASOUND_CAM_3D, 507, customLayout, self.delayedFitAndShowUltrasoundSliceIn3dView)
 
     customLayout = (
       "<layout type=\"horizontal\" split=\"false\" >"
@@ -413,7 +413,7 @@ class Guidelet(object):
       "  </view>"
       " </item>"
       "</layout>")
-    self.registerLayout(self.VIEW_3D_ULTRASOUND, 508, customLayout, self.delayedFitAndShowUltrasoundSliceIn3dView)
+    #self.registerLayout(self.VIEW_3D_ULTRASOUND, 508, customLayout, self.delayedFitAndShowUltrasoundSliceIn3dView)
 
     customLayout = (
       "<layout type=\"horizontal\" split=\"false\" >"
@@ -433,7 +433,7 @@ class Guidelet(object):
       "  </view>"
       " </item>"
       "</layout>")
-    self.registerLayout(self.VIEW_TRIPLE_3D_PARALLEL, 509, customLayout, self.hideUltrasoundSliceIn3DView)
+    #self.registerLayout(self.VIEW_TRIPLE_3D_PARALLEL, 509, customLayout, self.hideUltrasoundSliceIn3DView)
 
     customLayout = (
       "<layout type=\"horizontal\" split=\"false\" >"
@@ -458,22 +458,22 @@ class Guidelet(object):
       "  </view>"
       " </item>"
       "</layout>")
-    self.registerLayout(self.VIEW_QUAD_3D, 510, customLayout, self.hideUltrasoundSliceIn3DView)
+    #self.registerLayout(self.VIEW_QUAD_3D, 510, customLayout, self.hideUltrasoundSliceIn3DView)
 
     # Add existing Slicer layouts with callbacks
     layoutNode = self.layoutManager.layoutLogic().GetLayoutNode()
 
-    ultrasoundViewId = slicer.vtkMRMLLayoutNode.SlicerLayoutOneUpRedSliceView
-    self.registerLayout(self.VIEW_ULTRASOUND, ultrasoundViewId, \
-      layoutNode.GetLayoutDescription(ultrasoundViewId), self.delayedFitAndHideUltrasoundSliceIn3dView)
+    #ultrasoundViewId = slicer.vtkMRMLLayoutNode.SlicerLayoutOneUpRedSliceView
+    #self.registerLayout(self.VIEW_ULTRASOUND, ultrasoundViewId, \
+    #  layoutNode.GetLayoutDescription(ultrasoundViewId), self.delayedFitAndHideUltrasoundSliceIn3dView)
 
     threeDViewId = slicer.vtkMRMLLayoutNode.SlicerLayoutOneUp3DView
     self.registerLayout(self.VIEW_3D, threeDViewId, \
-      layoutNode.GetLayoutDescription(threeDViewId), self.showUltrasoundSliceIn3DView)
+      layoutNode.GetLayoutDescription(threeDViewId), self.hideUltrasoundSliceIn3DView)
 
     fourUpViewId = slicer.vtkMRMLLayoutNode.SlicerLayoutFourUpView
     self.registerLayout(self.VIEW_4UP, fourUpViewId, \
-      layoutNode.GetLayoutDescription(fourUpViewId), self.showUltrasoundSliceIn3DView)
+      layoutNode.GetLayoutDescription(fourUpViewId), self.hideUltrasoundSliceIn3DView)
 
   def onSceneLoaded(self):
     """ Derived classes can override this function
