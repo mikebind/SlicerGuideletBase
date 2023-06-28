@@ -96,6 +96,7 @@ class Guidelet(object):
     self.setupFeaturePanelList()
     self.setupAdvancedPanel()
     self.setupAdditionalPanel()
+    self.sliceletPanelLayout.addStretch()
 
     self.addConnectorObservers()
     self.setupConnections()
